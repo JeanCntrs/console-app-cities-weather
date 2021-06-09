@@ -1,7 +1,9 @@
+const fs = require('fs');
 const axios = require('axios');
 
 class Searches {
-    history = ['Cabildo', 'San Felipe', 'Viña del Mar', 'Santiago'];
+    history = [];
+    pathDB = './db/database.json';
 
     constructor() {
 
@@ -65,6 +67,26 @@ class Searches {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    addHistory(place = '') {
+        if (this.history.includes(place.toLowerCase())) return;
+
+        this.history.unshift(place.toLowerCase());
+
+        this.saveDB();
+    }
+
+    saveDB() {
+        const payload = {
+            history: this.history
+        };
+
+        fs.writeFileSync(this.pathDB, JSON.stringify(payload));
+    }
+
+    readDB() {
+
     }
 }
 

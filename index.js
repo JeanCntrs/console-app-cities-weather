@@ -15,7 +15,9 @@ const main = async () => {
                 const city = await readInput('Ciudad: ');
                 const places = await searches.searchCity(city);
                 const id = await listPlaces(places);
+                if (id === '0') continue;
                 const selectedPlace = places.find(place => place.id === id);
+                searches.addHistory(selectedPlace.name)
                 const weather = await searches.searchWeather(selectedPlace.lat, selectedPlace.lon);
 
                 console.clear();
@@ -27,6 +29,13 @@ const main = async () => {
                 console.log('Mínima:', weather.min);
                 console.log('Máxima:', weather.max);
                 console.log('Como está el clima:', weather.desc.green);
+                break;
+
+            case 2:
+                searches.history.forEach((place, index) => {
+                    const number = `${index + 1}`.green;
+                    console.log(`${number} ${place}`);
+                });
                 break;
         }
 
