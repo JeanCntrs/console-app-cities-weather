@@ -6,7 +6,16 @@ class Searches {
     pathDB = './db/database.json';
 
     constructor() {
+        this.readDB();
+    }
 
+    get historyCapitalize() {
+        return this.history.map(place => {
+            let words = place.split(' ');
+            words = words.map(word => word[0].toUpperCase() + word.substring(1));
+
+            return words.join(' ');
+        });
     }
 
     get mapboxParams() {
@@ -72,6 +81,7 @@ class Searches {
     addHistory(place = '') {
         if (this.history.includes(place.toLowerCase())) return;
 
+        this.history = this.history.splice(0, 5);
         this.history.unshift(place.toLowerCase());
 
         this.saveDB();
@@ -86,7 +96,12 @@ class Searches {
     }
 
     readDB() {
+        if (!fs.existsSync(this.pathDB)) return;
 
+        const info = fs.readFileSync(this.pathDB, { encoding: 'utf-8' });
+        const data = JSON.parse(info);
+
+        this.history = data.history;
     }
 }
 
